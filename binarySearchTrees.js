@@ -14,14 +14,14 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 class Node {
   constructor(value, leftChild, rightChild) {
     this.value = undefined ? null: value;
-    this.leftChild = undefined ? null: leftChild;
-    this.rightChild = undefined ? null: rightChild;
+    this.leftChild = leftChild === undefined ? null: leftChild;
+    this.rightChild = rightChild === undefined ? null: rightChild;
   }
 }
 
 class Tree {
   constructor(array) {
-    const sortedArray = array.sort((a, b) => a - b);
+    const sortedArray = [...new Set(array.sort((a, b) => a- b))];
     this.root = this.buildTree(sortedArray);
   }
 
@@ -34,6 +34,18 @@ class Tree {
     newNode.leftChild = this.buildTree(sortedArray.slice(0, midNode));
     newNode.rightChild = this.buildTree(sortedArray.slice(midNode + 1));
     return newNode;
+  }
+
+  insert(value, node = this.root) {
+
+    if (node === null) {
+      return new Node(value);
+    } else if (value < node.value) {
+      node.leftChild = this.insert(value, node.leftChild);
+    } else if (value > node.value) {
+      node.rightChild = this.insert(value, node.rightChild);
+    }
+    return node;
   }
 }
 
