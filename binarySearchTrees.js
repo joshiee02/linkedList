@@ -13,7 +13,7 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 
 class Node {
   constructor(value, leftChild, rightChild) {
-    this.value = undefined ? null: value;
+    this.value = value === undefined ? null: value;
     this.leftChild = leftChild === undefined ? null: leftChild;
     this.rightChild = rightChild === undefined ? null: rightChild;
   }
@@ -47,9 +47,31 @@ class Tree {
     }
     return node;
   }
+
+  delete(value, node = this.root) {
+    if (!node) return null;
+
+    if (node.value > value) {
+      node.leftChild = this.delete(value, node.leftChild);
+      return node;
+    } else if (node.value < value) {
+      node.rightChild = this.delete(value, node.rightChild);
+      return node;
+    } else {
+      if (!node.leftChild) {
+        let cache = node.rightChild;
+        node = new Node();
+        return cache;
+      } else if (!node.rightChild) {
+        let cache = node.leftChild;
+        node = new Node();
+        return cache;
+      }
+    }
+  }
 }
 
-let test = new Tree([6 ,5, 4, 3, 2, 1, 0]);
+let test = new Tree([5, 4, 3, 2, 1, 0]);
 prettyPrint(test.root);
 
 
